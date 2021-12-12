@@ -1,7 +1,6 @@
 import React from 'react';
-import styled from 'styled-components/macro';
-
 import { WEIGHTS } from '../../constants';
+import styled from 'styled-components/macro';
 
 const Logo = (props) => {
   return (
@@ -19,6 +18,10 @@ const Link = styled.a`
 const Wrapper = styled.h1`
   font-size: 1.5rem;
   font-weight: ${WEIGHTS.bold};
+  position: absolute;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 export default Logo;

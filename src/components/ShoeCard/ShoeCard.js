@@ -31,19 +31,31 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+	const variantWord = (v) => {
+		if (v === 'new-release') return 'Just released!';
+		if (v === 'on-sale') return 'Sale';
+		return '';
+	};
+
 	return (
 		<Link href={`/shoe/${slug}`}>
 			<Wrapper>
+				{variant !== 'default' && (
+					<Flag variant={variant}>{variantWord(variant)}</Flag>
+				)}
 				<ImageWrapper>
 					<Image alt='' src={imageSrc} />
 				</ImageWrapper>
 				<Spacer size={12} />
 				<Row>
 					<Name>{name}</Name>
-					<Price>{formatPrice(price)}</Price>
+					<Price isOnSale={typeof salePrice === 'number'}>
+						{formatPrice(price)}
+					</Price>
 				</Row>
 				<Row>
 					<ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+					{salePrice && <SalePrice>{formatPrice(salePrice)}</SalePrice>}
 				</Row>
 			</Wrapper>
 		</Link>
@@ -53,11 +65,27 @@ const ShoeCard = ({
 const Link = styled.a`
 	text-decoration: none;
 	color: inherit;
-  flex: 1 1 30%;
-  min-width: 340px;
+	flex: 1 1 30%;
+	min-width: 340px;
 `;
 
 const Wrapper = styled.article`
+	position: relative;
+	isolation: isolate;
+`;
+
+const Flag = styled.div`
+	background-color: ${(p) =>
+		p.variant === 'new-release' ? COLORS.secondary : COLORS.primary};
+	width: max-content;
+	padding: 8px;
+	color: ${COLORS.white};
+	font-weight: ${WEIGHTS.bold};
+	position: absolute;
+	top: 12px;
+	right: -4px;
+	z-index: 1;
+	border-radius: 2px;
 `;
 
 const ImageWrapper = styled.div`
@@ -66,10 +94,13 @@ const ImageWrapper = styled.div`
 
 const Image = styled.img`
 	width: 100%;
+	border-radius: 16px 16px 4px 4px;
 `;
 
 const Row = styled.div`
 	font-size: 1rem;
+	display: flex;
+	justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -77,7 +108,10 @@ const Name = styled.h3`
 	color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+	color: ${(p) => (p.isOnSale ? COLORS.gray[700] : 'inherit')};
+	text-decoration: ${(p) => (p.isOnSale ? 'line-through' : 'none')};
+`;
 
 const ColorInfo = styled.p`
 	color: ${COLORS.gray[700]};
